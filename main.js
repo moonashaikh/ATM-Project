@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import inquirer from "inquirer";
 let myBalance = 10000; // doller
 let myPin = 780;
@@ -16,7 +17,7 @@ if (PinAnswer.pin == myPin) {
             name: "operations",
             message: "Please select option",
             type: "list",
-            choices: ["withdraw", "chkbalance"],
+            choices: ["withdraw", "Fast Cash", "chkbalance"],
         },
     ]);
     console.log(operationsAns);
@@ -36,14 +37,30 @@ if (PinAnswer.pin == myPin) {
         // = , -= , +=
         {
             myBalance -= amountAns.amount;
-            console.log("withdraw succesfully", +amountAns.amount);
-            console.log("your remainning balance :" + myBalance);
+            console.log(`withdraw succesfully:  ${amountAns.amount}`);
+            console.log(`your remainning balance :${myBalance}`);
         }
     }
     else if (operationsAns.operations === "chkBalance") {
-        console.log("your balance is :" + myBalance);
+        console.log(`your balance is ${myBalance}`);
     }
-}
-else {
-    console.log("pin in incorect, login again");
+    else if (operationsAns.operations === "Fast Cash") {
+        let Fast = await inquirer.prompt([
+            { name: "fastcash",
+                message: "select the amount which you withdraw",
+                type: "list",
+                choices: [1000, 2000, 5000, 10000]
+            }
+        ]);
+        if (Fast.fastcash > myBalance) {
+            console.log(`Insufficient funds. your current balance is ${myBalance}`);
+        }
+        else {
+            myBalance -= Fast.fastcash;
+            console.log(`you have sucessfully withdraw ${Fast.fastcash} \n your remaining balace is ${myBalance}`);
+        }
+    }
+    else {
+        console.log("pin in incorect, login again");
+    }
 }
